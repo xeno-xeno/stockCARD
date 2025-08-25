@@ -4,7 +4,7 @@
 
 ## 🎮 Live Demo
 
-GitHub Pages에서 바로 플레이하세요: [Stock Ticker Quiz](https://xenoxeno.github.io/StockCARD/)
+GitHub Pages에서 바로 플레이하세요: [Stock Ticker Quiz](https://xeno-xeno.github.io/stockCARD/)
 
 ## 🚀 시작하기
 
