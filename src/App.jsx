@@ -6,8 +6,16 @@ import InvestmentQuiz from './components/InvestmentQuiz'
 import InvestQuizStart from './components/InvestQuizStart'
 
 function App() {
-  // GitHub Pages game.html 경로에서 접근했을 때 소개 페이지로 이동
-  const initialView = (window.location.pathname.includes('/game') || window.location.pathname.includes('game.html')) ? 'ticker100-start' : 'home';
+  // GitHub Pages 경로에서 접근했을 때 해당 게임으로 이동
+  const getInitialView = () => {
+    if (window.location.pathname.includes('/game') || window.location.pathname.includes('game.html')) {
+      return 'ticker100-start';
+    } else if (window.location.pathname.includes('/quiz') || window.location.pathname.includes('quiz.html')) {
+      return 'invest-quiz-start';
+    }
+    return 'home';
+  };
+  const initialView = getInitialView();
   const [currentView, setCurrentView] = useState(initialView)
 
   const handleGameSelect = (gameId) => {
@@ -27,8 +35,9 @@ function App() {
   }
 
   const handleGameEnd = () => {
-    // /game/ 또는 game.html 경로에서는 메인 페이지로 이동
-    if (window.location.pathname.includes('/game') || window.location.pathname.includes('game.html')) {
+    // GitHub Pages 경로에서는 메인 페이지로 이동
+    if (window.location.pathname.includes('/game') || window.location.pathname.includes('game.html') || 
+        window.location.pathname.includes('/quiz') || window.location.pathname.includes('quiz.html')) {
       window.location.href = '/stockCARD/';
     } else {
       setCurrentView('home');

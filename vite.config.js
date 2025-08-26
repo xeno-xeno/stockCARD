@@ -24,6 +24,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: 'game.html',
+        quiz: 'quiz.html',
       }
     }
   }
