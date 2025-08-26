@@ -181,18 +181,8 @@
 
     <script>
       function startTicker100() {
-        // GitHub Pages에서는 game.html로 이동
-        if (window.location.hostname === 'xeno-xeno.github.io') {
-          window.location.href = '/stockCARD/game.html';
-        } 
-        // 로컬 Live Server
-        else if (window.location.port === '5500' || window.location.protocol === 'file:') {
-          alert('티커 100 게임을 시작하려면 개발 서버를 실행해주세요.\n\n터미널에서 "npm run dev" 명령을 실행하고\nhttp://localhost:5173/stockCARD/ 로 접속해주세요.');
-        } 
-        // Vite 개발 서버
-        else {
-          window.location.href = '/stockCARD/game.html';
-        }
+        // game 폴더로 이동
+        window.location.href = './game/';
       }
     </script>
   </body>
