@@ -4,8 +4,8 @@ import StockTickerQuiz from './components/StockTickerQuiz'
 import Ticker100Start from './components/Ticker100Start'
 
 function App() {
-  // GitHub Pages /game/ 경로에서 접근했을 때 소개 페이지로 이동
-  const initialView = window.location.pathname.includes('/game') ? 'ticker100-start' : 'home';
+  // GitHub Pages game.html 경로에서 접근했을 때 소개 페이지로 이동
+  const initialView = (window.location.pathname.includes('/game') || window.location.pathname.includes('game.html')) ? 'ticker100-start' : 'home';
   const [currentView, setCurrentView] = useState(initialView)
 
   const handleGameSelect = (gameId) => {
@@ -20,8 +20,8 @@ function App() {
   }
 
   const handleGameEnd = () => {
-    // /game/ 경로에서는 메인 페이지로 이동
-    if (window.location.pathname.includes('/game')) {
+    // /game/ 또는 game.html 경로에서는 메인 페이지로 이동
+    if (window.location.pathname.includes('/game') || window.location.pathname.includes('game.html')) {
       window.location.href = '/stockCARD/';
     } else {
       setCurrentView('home');
