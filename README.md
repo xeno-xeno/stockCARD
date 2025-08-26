@@ -7,7 +7,6 @@
 GitHub Pages에서 바로 플레이하세요: [Stock Ticker Quiz](https://xeno-xeno.github.io/stockCARD/)
 
 
-
 ## ✨ 기능
 
 - ✅ 티커 → 회사명 매칭 퀴즈

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Shuffle, ChevronRight, Trophy, Target } from 'lucide-react';
 import { stockData } from '../data/stockData';
 
-const StockTickerQuiz = () => {
+const StockTickerQuiz = ({ onGameEnd }) => {
   // 주식 데이터는 별도 파일에서 import
 
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -137,51 +137,10 @@ const StockTickerQuiz = () => {
     };
   }, [autoAdvance, countdown]);
 
-  // 시작 화면
+  // 컬포넌트 props로 게임 시작 제어
   if (!gameStarted) {
-    return (
-      <div className="max-w-2xl mx-auto p-4 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex flex-col">
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Target className="text-blue-600" size={32} />
-            <h1 className="text-2xl font-bold text-gray-800">도전 티커 100!</h1>
-          </div>
-          
-          <p className="text-base text-gray-600 mb-6 leading-relaxed">
-            티커(Ticker)를 보고<br />
-            올바른 회사명을 맞춰보세요!
-          </p>
-          
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <h3 className="font-semibold text-gray-700 mb-4">게임 방법</h3>
-            <ul className="text-sm text-gray-600 space-y-2 text-left">
-              <li>• 티커(예: AAPL)가 주어집니다</li>
-              <li>• 3개의 선택지 중 올바른 회사명을 고르세요</li>
-              <li>• 연속으로 100개를 맞추면 승리!</li>
-              <li>• 틀리면 게임 오버!</li>
-              <li>• S&P500 종목이 출제됩니다</li>
-            </ul>
-          </div>
-          
-          <button
-            onClick={startGame}
-            className="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold text-base hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
-          >
-            <Trophy size={20} />
-            게임 시작하기
-          </button>
-          </div>
-        </div>
-        
-        {/* Footer */}
-        <div className="text-center mt-auto py-3 w-full">
-          <div className="text-xs text-gray-400">
-            powered by 초이스스탁
-          </div>
-        </div>
-      </div>
-    );
+    startGame();
+    return null;
   }
 
   return (
@@ -195,7 +154,7 @@ const StockTickerQuiz = () => {
             도전 티커 100!
           </h1>
           <button
-            onClick={resetGame}
+            onClick={onGameEnd || resetGame}
             className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"
           >
             <Shuffle size={12} />
