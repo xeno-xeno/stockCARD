@@ -84,29 +84,32 @@
           </div>
         </div>
 
-        <!-- 준비중 게임 1 -->
-        <div class="game-card unavailable bg-gradient-to-r from-green-50 to-green-100 border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
+        <!-- 투자 퀴즈 20 -->
+        <div class="game-card available bg-gradient-to-r from-green-50 to-green-100 border-2 border-transparent hover:border-green-300 rounded-2xl p-6 shadow-lg" onclick="startInvestQuiz()">
           <div class="flex items-start gap-4">
-            <div class="p-3 rounded-xl bg-white shadow-sm grayscale">
-              <svg class="text-gray-400 w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="p-3 rounded-xl bg-white shadow-sm">
+              <svg class="text-green-600 w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path d="m3 3 3 9-3 9 19-9Z"></path>
               </svg>
             </div>
             
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-2">
-                <h3 class="text-xl font-bold text-gray-800 masked-title">??? ??? ???</h3>
-                <span class="text-xs px-2 py-1 rounded-full font-medium bg-yellow-100 text-yellow-700">준비중</span>
+                <h3 class="text-xl font-bold text-gray-800">매일투자퀴즈 20!</h3>
+                <span class="text-xs px-2 py-1 rounded-full font-medium bg-green-100 text-green-700">플레이 가능</span>
               </div>
               
               <p class="text-gray-600 text-sm mb-3 leading-relaxed">
-                곧 공개될 흥미진진한 주식 게임
+                매일 퀴즈에 도전하세요
               </p>
               
               <div class="flex justify-between items-center">
                 <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded-full">
-                  난이도: ???
+                  난이도: 초급~중급
                 </span>
+                <div class="text-green-600 text-sm font-medium">
+                  플레이하기 →
+                </div>
               </div>
             </div>
           </div>
@@ -183,6 +186,11 @@
       function startTicker100() {
         // game.html로 직접 이동
         window.location.href = './game.html';
+      }
+      
+      function startInvestQuiz() {
+        // 투자 퀴즈는 React 앱에서만 실행 가능
+        alert('매일투자퀴즈 20!은 개발 서버에서만 플레이 가능합니다.\n\n터미널에서 "npm run dev" 명령을 실행하고\nhttp://localhost:5173/stockCARD/ 로 접속해주세요.');
       }
     </script>
   </body>

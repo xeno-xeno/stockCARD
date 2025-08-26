@@ -14,15 +14,15 @@ const GameSelection = ({ onGameSelect }) => {
       status: '플레이 가능'
     },
     {
-      id: 'coming-soon-1',
-      title: '??? ??? ???',
-      description: '곧 공개될 흥미진진한 주식 게임',
+      id: 'invest-quiz',
+      title: '매일투자퀴즈 20!',
+      description: '매일 퀴즈에 도전하세요',
       icon: TrendingUp,
       iconColor: 'text-green-600',
       bgColor: 'from-green-50 to-green-100',
       borderColor: 'hover:border-green-300',
-      difficulty: '???',
-      status: '준비중'
+      difficulty: '초급~중급',
+      status: '플레이 가능'
     },
     {
       id: 'coming-soon-2',

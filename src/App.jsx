@@ -2,6 +2,8 @@ import { useState } from 'react'
 import GameSelection from './components/GameSelection'
 import StockTickerQuiz from './components/StockTickerQuiz'
 import Ticker100Start from './components/Ticker100Start'
+import InvestmentQuiz from './components/InvestmentQuiz'
+import InvestQuizStart from './components/InvestQuizStart'
 
 function App() {
   // GitHub Pages game.html 경로에서 접근했을 때 소개 페이지로 이동
@@ -11,12 +13,17 @@ function App() {
   const handleGameSelect = (gameId) => {
     if (gameId === 'ticker100') {
       setCurrentView('ticker100-start')
+    } else if (gameId === 'invest-quiz') {
+      setCurrentView('invest-quiz-start')
     }
-    // 추후 다른 게임들 추가
   }
 
   const handleStartTicker100 = () => {
     setCurrentView('ticker100-game')
+  }
+
+  const handleStartInvestQuiz = () => {
+    setCurrentView('invest-quiz-game')
   }
 
   const handleGameEnd = () => {
@@ -47,6 +54,19 @@ function App() {
 
   if (currentView === 'ticker100-game') {
     return <StockTickerQuiz onGameEnd={handleGameEnd} />
+  }
+
+  if (currentView === 'invest-quiz-start') {
+    return (
+      <InvestQuizStart 
+        onStartGame={handleStartInvestQuiz}
+        onBack={handleBackToHome}
+      />
+    )
+  }
+
+  if (currentView === 'invest-quiz-game') {
+    return <InvestmentQuiz onGameEnd={handleGameEnd} />
   }
 
   return <GameSelection onGameSelect={handleGameSelect} />
