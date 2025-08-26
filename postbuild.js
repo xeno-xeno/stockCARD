@@ -1,0 +1,30 @@
+import fs from 'fs';
+import path from 'path';
+
+// dist 폴더의 assets 내 파일들 찾기
+const assetsDir = './dist/assets';
+const files = fs.readdirSync(assetsDir);
+
+const jsFile = files.find(file => file.startsWith('main-') && file.endsWith('.js'));
+const cssFile = files.find(file => file.startsWith('game-') && file.endsWith('.css'));
+
+console.log('Found JS file:', jsFile);
+console.log('Found CSS file:', cssFile);
+
+// game 폴더 생성
+if (!fs.existsSync('./dist/game')) {
+  fs.mkdirSync('./dist/game');
+}
+
+// game.html을 기반으로 game/index.html 생성
+let gameHtml = fs.readFileSync('./game.html', 'utf8');
+gameHtml = gameHtml.replace('/src/main.jsx', `../assets/${jsFile}`);
+gameHtml = gameHtml.replace('<div id="root"></div>', `<div id="root"></div>
+    <link rel="stylesheet" href="../assets/${cssFile}">`);
+
+fs.writeFileSync('./dist/game/index.html', gameHtml);
+
+// public/index.html을 dist/index.html로 복사
+fs.copyFileSync('./public/index.html', './dist/index.html');
+
+console.log('Post-build completed successfully!');
