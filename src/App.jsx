@@ -4,8 +4,8 @@ import StockTickerQuiz from './components/StockTickerQuiz'
 import Ticker100Start from './components/Ticker100Start'
 
 function App() {
-  // GitHub Pages /game/ 경로에서 접근했을 때 바로 게임으로 이동
-  const initialView = window.location.pathname.includes('/game') ? 'ticker100-game' : 'home';
+  // GitHub Pages /game/ 경로에서 접근했을 때 소개 페이지로 이동
+  const initialView = window.location.pathname.includes('/game') ? 'ticker100-start' : 'home';
   const [currentView, setCurrentView] = useState(initialView)
 
   const handleGameSelect = (gameId) => {
