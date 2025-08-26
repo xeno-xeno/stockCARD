@@ -19,8 +19,8 @@ if (!fs.existsSync('./dist/game')) {
 // game.html을 기반으로 game/index.html 생성
 let gameHtml = fs.readFileSync('./game.html', 'utf8');
 gameHtml = gameHtml.replace('/src/main.jsx', `../assets/${jsFile}`);
-gameHtml = gameHtml.replace('<div id="root"></div>', `<div id="root"></div>
-    <link rel="stylesheet" href="../assets/${cssFile}">`);
+gameHtml = gameHtml.replace('</head>', `  <link rel="stylesheet" href="../assets/${cssFile}">
+</head>`);
 
 fs.writeFileSync('./dist/game/index.html', gameHtml);
 
