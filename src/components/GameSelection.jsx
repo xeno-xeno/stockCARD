@@ -53,8 +53,8 @@ const GameSelection = ({ onGameSelect }) => {
       
       {/* 헤더 */}
       <div className="text-center mb-8 mt-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">📈 StockCARD</h1>
-        <p className="text-lg text-gray-600">주식 학습을 위한 재미있는 게임들</p>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">📈 StockGame</h1>
+        <p className="text-lg text-gray-600">즐거운 주식탐구생활 게임</p>
       </div>
 
       {/* 게임 리스트 */}
