@@ -33,7 +33,7 @@ for (let i = 1; i < lines.length; i++) {
       option1: values[3],
       option2: values[4],
       answer: values[5],
-      tip: values[6] || ''
+      tip: (values[6] || '').replace(/^팁!\s*/, '')
     });
   }
 }
