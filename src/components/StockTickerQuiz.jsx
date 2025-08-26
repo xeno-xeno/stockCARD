@@ -21,9 +21,18 @@ const StockTickerQuiz = () => {
   const [gameOver, setGameOver] = useState(false);
   const [correctTickers, setCorrectTickers] = useState(new Set());
 
-  // 새 문제 생성 (중복 허용)
+  // 새 문제 생성 (중복 방지)
   const generateQuestion = () => {
-    const correct = stockData[Math.floor(Math.random() * stockData.length)];
+    // 맞춘 적 없는 종목들 필터링
+    const availableStocks = stockData.filter(stock => !correctTickers.has(stock.ticker));
+    
+    // 모든 종목을 맞춘 경우 게임 완료
+    if (availableStocks.length === 0) {
+      setGameOver(true);
+      return;
+    }
+    
+    const correct = availableStocks[Math.floor(Math.random() * availableStocks.length)];
     const incorrectOptions = stockData
       .filter(stock => stock.name !== correct.name)
       .sort(() => Math.random() - 0.5)
