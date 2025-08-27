@@ -41,7 +41,6 @@ function App() {
   const handleStartWeeklyPortfolio = () => {
     setCurrentView('weekly-portfolio-game')
   }
-
   const handleGameEnd = () => {
     // GitHub Pages 경로에서는 메인 페이지로 이동
     if (window.location.pathname.includes('/game') || window.location.pathname.includes('game.html') || 
@@ -98,7 +97,6 @@ function App() {
   if (currentView === 'weekly-portfolio-game') {
     return <WeeklyPortfolio onGameEnd={handleGameEnd} />
   }
-
   return <GameSelection onGameSelect={handleGameSelect} />
 }
 
