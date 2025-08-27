@@ -1,6 +1,11 @@
+import { useEffect } from 'react';
 import { Target, TrendingUp, BarChart3, Gamepad2 } from 'lucide-react';
 
 const GameSelection = ({ onGameSelect }) => {
+  // 브라우저 타이틀 설정
+  useEffect(() => {
+    document.title = 'StockGame - 즐거운 주식탐구생활 게임';
+  }, []);
   const games = [
     {
       id: 'ticker100',

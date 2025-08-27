@@ -3,6 +3,13 @@ import { Shuffle, ChevronRight, Trophy, Target } from 'lucide-react';
 import { stockData } from '../data/stockData';
 
 const StockTickerQuiz = ({ onGameEnd }) => {
+  // 브라우저 타이틀 설정
+  useEffect(() => {
+    document.title = '도전 티커 100! - StockGame';
+    return () => {
+      document.title = 'StockGame';
+    };
+  }, []);
   // 주식 데이터는 별도 파일에서 import
 
   const [currentQuestion, setCurrentQuestion] = useState(null);

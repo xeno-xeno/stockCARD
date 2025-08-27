@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Shuffle, ChevronRight, Trophy, Target } from 'lucide-react';
 import { investQuizData } from '../data/investQuizData';
+import { getDifficultyLabel, QUIZ_CONFIG } from '../utils/dailyQuizGenerator';
 
 const InvestmentQuiz = ({ onGameEnd }) => {
+  // 브라우저 타이틀 설정
+  useEffect(() => {
+    document.title = '매일투자퀴즈 20! - StockGame';
+    return () => {
+      document.title = 'StockGame'; // 컴포넌트 언마운트 시 원래 타이틀로 복원
+    };
+  }, []);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -18,15 +26,15 @@ const InvestmentQuiz = ({ onGameEnd }) => {
     return saved ? parseInt(saved, 10) : 0;
   });
 
-  // 새 문제 생성 (20문제 제한)
+  // 새 문제 생성 (랜덤)
   const generateQuestion = () => {
     // 20문제 완료 시 게임 종료
-    if (totalQuestions >= 20) {
+    if (totalQuestions >= QUIZ_CONFIG.daily_quiz_size) {
       setGameOver(true);
       return;
     }
 
-    // 사용 가능한 문제들 필터링
+    // 아직 사용하지 않은 문제들 중에서 랜덤 선택
     const availableQuestions = investQuizData.filter(quiz => !usedQuestions.has(quiz.id));
     
     if (availableQuestions.length === 0) {
@@ -39,10 +47,11 @@ const InvestmentQuiz = ({ onGameEnd }) => {
     setCurrentQuestion({
       id: selectedQuiz.id,
       category: selectedQuiz.category,
+      difficulty: selectedQuiz.difficulty,
       question: selectedQuiz.question,
       options: [
-        { text: selectedQuiz.option1, isCorrect: selectedQuiz.option1 === selectedQuiz.answer },
-        { text: selectedQuiz.option2, isCorrect: selectedQuiz.option2 === selectedQuiz.answer }
+        { text: selectedQuiz.option1, isCorrect: selectedQuiz.answer === 1 },
+        { text: selectedQuiz.option2, isCorrect: selectedQuiz.answer === 2 }
       ].sort(() => Math.random() - 0.5), // 순서 섞기
       correctAnswer: selectedQuiz.answer,
       tip: selectedQuiz.tip
@@ -149,7 +158,7 @@ const InvestmentQuiz = ({ onGameEnd }) => {
             <div className="text-xs text-gray-500">정답</div>
           </div>
           <div>
-            <div className="text-base font-bold text-gray-700">{totalQuestions}/20</div>
+            <div className="text-base font-bold text-gray-700">{totalQuestions}/{QUIZ_CONFIG.daily_quiz_size}</div>
             <div className="text-xs text-gray-500">진행도</div>
           </div>
           <div>
@@ -161,6 +170,7 @@ const InvestmentQuiz = ({ onGameEnd }) => {
             <div className="text-xs text-gray-500">최고기록</div>
           </div>
         </div>
+        
       </div>
 
       {/* 문제 카드 */}
@@ -169,16 +179,24 @@ const InvestmentQuiz = ({ onGameEnd }) => {
           
           {/* 문제 표시 */}
           <div className="text-center mb-3 mt-8">
-            <div className="inline-block bg-gradient-to-r from-green-600 to-green-700 text-white px-2 py-1 rounded-full text-xs mb-2">
-              {currentQuestion.category}
+            <div className="flex justify-center gap-2 mb-2">
+              <div className="inline-block bg-gradient-to-r from-green-600 to-green-700 text-white px-2 py-1 rounded-full text-xs">
+                {currentQuestion.category}
+              </div>
+              <div className={`inline-block text-white px-2 py-1 rounded-full text-xs ${
+                currentQuestion.difficulty === 'E' ? 'bg-green-500' :
+                currentQuestion.difficulty === 'M' ? 'bg-yellow-600' : 'bg-red-500'
+              }`}>
+                {getDifficultyLabel(currentQuestion.difficulty)}
+              </div>
             </div>
             <div className="text-lg font-bold text-gray-800 leading-relaxed px-2 mb-3">
               {currentQuestion.question}
             </div>
             {/* 힌트 미리 표시 */}
             {currentQuestion.tip && (
-              <div className="text-xs text-gray-600 bg-yellow-50 p-2 rounded mx-2">
-                💡 힌트: {currentQuestion.tip}
+              <div className="text-xs text-gray-600 bg-yellow-50 p-2 rounded mx-2 whitespace-pre-line">
+                💡 힌트: {currentQuestion.tip.replace(/(\s예:)/g, '\n예:')}
               </div>
             )}
           </div>
@@ -254,7 +272,7 @@ const InvestmentQuiz = ({ onGameEnd }) => {
                     </div>
                   </div>
                   <button
-                    onClick={startGame}
+                    onClick={onGameEnd}
                     className="bg-green-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-700 transition-colors flex items-center gap-2 mx-auto text-sm"
                   >
                     <Trophy size={16} />
