@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const csvContent = fs.readFileSync('./quiz_pool_300_refactored.csv', 'utf8');
+const csvContent = fs.readFileSync('./quiz_pool_300_final_tip.csv', 'utf8');
 const lines = csvContent.split('\n').filter(line => line.trim());
 const header = lines[0].split(',');
 
@@ -25,17 +25,17 @@ for (let i = 1; i < lines.length; i++) {
   }
   values.push(current.trim().replace(/^["']|["']$/g, '')); // 마지막 값도 따옴표 제거
   
-  if (values.length >= 8) {
-    // 새로운 구조: id,카테고리,난이도,퀴즈,보기1,보기2,정답,힌트
+  if (values.length >= 6) {
+    // 새로운 구조: 카테고리,퀴즈,보기1,보기2,정답,힌트
     quizData.push({
-      id: parseInt(values[0]),
-      category: values[1],
-      difficulty: values[2], // 난이도 추가 (E: Easy, M: Medium, H: Hard)
-      question: values[3],
-      option1: values[4],
-      option2: values[5],
-      answer: parseInt(values[6]), // 정답은 1 또는 2
-      tip: (values[7] || '').replace(/^["']?힌트!\s*/, '').replace(/["']?$/, '')
+      id: i, // 순서대로 id 부여
+      category: values[0],
+      difficulty: 'M', // 기본 중급으로 설정
+      question: values[1],
+      option1: values[2],
+      option2: values[3],
+      answer: parseInt(values[4]), // 정답은 1 또는 2
+      tip: (values[5] || '').replace(/^["']?팁!\s*:\s*/, '').replace(/["']?$/, '')
     });
   }
 }
