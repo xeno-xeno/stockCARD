@@ -20,8 +20,6 @@ const InvestQuizStart = ({ onStartGame, onBack }) => {
             <ul className="text-sm text-gray-600 space-y-2 text-left">
               <li>• 투자 관련 퀴즈가 출제됩니다</li>
               <li>• 2개의 선택지 중 올바른 답을 고르세요</li>
-              <li>• 총 300문제 풀에서 20문제가 랜덤으로 출제됩니다</li>
-              <li>• 힌트가 제공되어 학습에 도움이 됩니다</li>
               <li>• 정답률과 최고기록이 저장됩니다</li>
             </ul>
           </div>

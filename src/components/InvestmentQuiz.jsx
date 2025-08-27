@@ -193,12 +193,6 @@ const InvestmentQuiz = ({ onGameEnd }) => {
             <div className="text-lg font-bold text-gray-800 leading-relaxed px-2 mb-3">
               {currentQuestion.question}
             </div>
-            {/* 힌트 미리 표시 */}
-            {currentQuestion.tip && (
-              <div className="text-xs text-gray-600 bg-yellow-50 p-2 rounded mx-2 whitespace-pre-line">
-                💡 힌트: {currentQuestion.tip.replace(/(\s예:)/g, '\n예:')}
-              </div>
-            )}
           </div>
 
           {/* 선택지 */}
@@ -254,10 +248,16 @@ const InvestmentQuiz = ({ onGameEnd }) => {
                 ) : (
                   <div>
                     <div className="text-sm font-bold mb-0.5">❌ 틀렸습니다</div>
-                    <div className="text-xs mb-1">정답: {currentQuestion.correctAnswer}</div>
                   </div>
                 )}
               </div>
+              
+              {/* 정답/오답 상관없이 팁과 예시 표시 */}
+              {currentQuestion.tip && (
+                <div className="text-xs text-gray-600 bg-yellow-50 p-2 rounded mx-2 mt-2 whitespace-pre-line text-left">
+                  💡 {currentQuestion.tip.replace(/(\s예:)/g, '\n예:')}
+                </div>
+              )}
               
               {gameOver ? (
                 <div className="space-y-1.5">
