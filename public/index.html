@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/stockCARD/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StockGame - 즐거운 주식탐구생활</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+
+      .game-card {
+        transition: all 0.2s ease;
+      }
+
+      .game-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .game-card.available {
+        cursor: pointer;
+      }
+
+      .game-card.unavailable {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .masked-title {
+        font-family: monospace;
+        letter-spacing: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="max-w-4xl mx-auto p-4 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen flex flex-col">
+      
+      <!-- 헤더 -->
+      <div class="text-center mb-8 mt-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">📈 StockGame</h1>
+        <p class="text-lg text-gray-600">즐거운 주식탐구생활 게임</p>
+      </div>
+
+      <!-- 게임 리스트 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
+        
+        <!-- 도전 티커 100 -->
+        <div class="game-card available bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-transparent hover:border-blue-300 rounded-2xl p-6 shadow-lg" onclick="startTicker100()">
+          <div class="flex items-start gap-4">
+            <div class="p-3 rounded-xl bg-white shadow-sm">
+              <svg class="text-blue-600 w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+            </div>
+            
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h3 class="text-xl font-bold text-gray-800">도전 티커 100!</h3>
+                <span class="text-xs px-2 py-1 rounded-full font-medium bg-green-100 text-green-700">플레이 가능</span>
+              </div>
+              
+              <p class="text-gray-600 text-sm mb-3 leading-relaxed">
+                티커를 보고 회사명을 맞춰보세요
+              </p>
+              
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded-full">
+                  난이도: 초급~고급
+                </span>
+                <div class="text-blue-600 text-sm font-medium">
+                  플레이하기 →
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 투자 퀴즈 20 -->
+        <div class="game-card available bg-gradient-to-r from-green-50 to-green-100 border-2 border-transparent hover:border-green-300 rounded-2xl p-6 shadow-lg" onclick="startInvestQuiz()">
+          <div class="flex items-start gap-4">
+            <div class="p-3 rounded-xl bg-white shadow-sm">
+              <svg class="text-green-600 w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="m3 3 3 9-3 9 19-9Z"></path>
+              </svg>
+            </div>
+            
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h3 class="text-xl font-bold text-gray-800">매일투자퀴즈 20!</h3>
+                <span class="text-xs px-2 py-1 rounded-full font-medium bg-green-100 text-green-700">플레이 가능</span>
+              </div>
+              
+              <p class="text-gray-600 text-sm mb-3 leading-relaxed">
+                매일 퀴즈에 도전하세요
+              </p>
+              
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded-full">
+                  난이도: 초급~중급
+                </span>
+                <div class="text-green-600 text-sm font-medium">
+                  플레이하기 →
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 준비중 게임 2 -->
+        <div class="game-card unavailable bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
+          <div class="flex items-start gap-4">
+            <div class="p-3 rounded-xl bg-white shadow-sm grayscale">
+              <svg class="text-gray-400 w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M3 3v18h18"></path>
+                <path d="m19 9-5 5-4-4-3 3"></path>
+              </svg>
+            </div>
+            
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h3 class="text-xl font-bold text-gray-800 masked-title">????? ????</h3>
+                <span class="text-xs px-2 py-1 rounded-full font-medium bg-yellow-100 text-yellow-700">준비중</span>
+              </div>
+              
+              <p class="text-gray-600 text-sm mb-3 leading-relaxed">
+                새로운 방식의 주식 학습 게임
+              </p>
+              
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded-full">
+                  난이도: ???
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 준비중 게임 3 -->
+        <div class="game-card unavailable bg-gradient-to-r from-orange-50 to-orange-100 border-2 border-gray-200 rounded-2xl p-6 shadow-lg">
+          <div class="flex items-start gap-4">
+            <div class="p-3 rounded-xl bg-white shadow-sm grayscale">
+              <svg class="text-gray-400 w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+              </svg>
+            </div>
+            
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <h3 class="text-xl font-bold text-gray-800 masked-title">??? ???????</h3>
+                <span class="text-xs px-2 py-1 rounded-full font-medium bg-yellow-100 text-yellow-700">준비중</span>
+              </div>
+              
+              <p class="text-gray-600 text-sm mb-3 leading-relaxed">
+                실전 같은 투자 경험을 제공하는 게임
+              </p>
+              
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-500 bg-white px-2 py-1 rounded-full">
+                  난이도: ???
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="text-center mt-auto py-4">
+        <div class="text-xs text-gray-400">
+          powered by 초이스스탁
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function startTicker100() {
+        // game.html로 직접 이동
+        window.location.href = './game.html';
+      }
+      
+      function startInvestQuiz() {
+        // quiz.html로 직접 이동
+        window.location.href = './quiz.html';
+      }
+    </script>
+  </body>
+</html>
