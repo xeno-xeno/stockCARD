@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const csvContent = fs.readFileSync('./quiz_stock300.csv', 'utf8');
+const csvContent = fs.readFileSync('./quiz_stock300-fix.csv', 'utf8');
 const lines = csvContent.split('\n').filter(line => line.trim());
 const header = lines[0].split(',');
 
@@ -25,17 +25,23 @@ for (let i = 1; i < lines.length; i++) {
   }
   values.push(current.trim().replace(/^["']|["']$/g, '')); // 마지막 값도 따옴표 제거
   
-  if (values.length >= 6) {
-    // 새로운 구조: 카테고리,퀴즈,보기1,보기2,정답,힌트
+  if (values.length >= 7) {
+    // 새로운 구조: 카테고리,퀴즈,보기1,보기2,정답,난이도,힌트
+    const difficultyMap = {
+      '초급': 'E',
+      '응용': 'M', 
+      '고급': 'H'
+    };
+    
     quizData.push({
       id: i, // 순서대로 id 부여
       category: values[0],
-      difficulty: 'M', // 기본 중급으로 설정
+      difficulty: difficultyMap[values[5]] || 'M', // 난이도 매핑
       question: values[1],
       option1: values[2],
       option2: values[3],
       answer: parseInt(values[4]), // 정답은 1 또는 2
-      tip: (values[5] || '').replace(/^["']?팁!\s*:\s*/, '').replace(/["']?$/, '')
+      tip: (values[6] || '').replace(/^["']?팁!\s*:\s*/, '').replace(/["']?$/, '')
     });
   }
 }
