@@ -235,11 +235,11 @@ const InvestmentQuiz = ({ onGameEnd }) => {
                     </div>
                   </div>
                   <button
-                    onClick={resetGame}
+                    onClick={() => window.open('https://www.choicestock.co.kr/stock/note', '_blank')}
                     className="bg-green-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-700 transition-colors flex items-center gap-2 mx-auto text-sm"
                   >
                     <Trophy size={16} />
-                    내일 다시 도전~!
+                    초스에서 더 렙업하기
                   </button>
                 </div>
               ) : (
