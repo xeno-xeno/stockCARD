@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Shuffle, ChevronRight, Trophy, Target } from 'lucide-react';
 import { investQuizData } from '../data/investQuizData';
-import { getDifficultyLabel, QUIZ_CONFIG } from '../utils/dailyQuizGenerator';
+import { getDifficultyLabel, QUIZ_CONFIG, getTodayQuiz } from '../utils/dailyQuizGenerator';
 
 const InvestmentQuiz = ({ onGameEnd }) => {
   // 브라우저 타이틀 설정
@@ -11,83 +11,38 @@ const InvestmentQuiz = ({ onGameEnd }) => {
       document.title = 'StockGame'; // 컴포넌트 언마운트 시 원래 타이틀로 복원
     };
   }, []);
-  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
-  const [totalQuestions, setTotalQuestions] = useState(0);
   const [gameStarted, setGameStarted] = useState(true);
-  const [countdown, setCountdown] = useState(0);
-  const [autoAdvance, setAutoAdvance] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [usedQuestions, setUsedQuestions] = useState(new Set());
+  const [todayQuizzes, setTodayQuizzes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // 새 문제 생성 (난이도 균형 고려)
-  const generateQuestion = () => {
-    if (totalQuestions >= QUIZ_CONFIG.daily_quiz_size) {
-      setGameOver(true);
-      return;
+  // 오늘의 퀴즈 로드
+  const loadTodayQuiz = async () => {
+    setIsLoading(true);
+    try {
+      const dailyQuizResult = getTodayQuiz(investQuizData);
+      const formattedQuizzes = dailyQuizResult.quizzes.map(quiz => ({
+        id: quiz.id,
+        category: quiz.category,
+        difficulty: quiz.difficulty,
+        question: quiz.question,
+        options: [
+          { text: quiz.option1, isCorrect: quiz.answer === 1 },
+          { text: quiz.option2, isCorrect: quiz.answer === 2 }
+        ].sort(() => Math.random() - 0.5), // 순서 섞기
+        correctAnswer: quiz.answer,
+        tip: quiz.tip
+      }));
+      setTodayQuizzes(formattedQuizzes);
+    } catch (error) {
+      console.error('오늘의 퀴즈 로드 실패:', error);
+    } finally {
+      setIsLoading(false);
     }
-
-    // 아직 사용하지 않은 문제들 중에서 선택
-    const availableQuestions = investQuizData.filter(quiz => !usedQuestions.has(quiz.id));
-    
-    if (availableQuestions.length === 0) {
-      setGameOver(true);
-      return;
-    }
-
-    // 현재까지 선택된 난이도별 개수 계산
-    const currentDifficulties = Array.from(usedQuestions).map(id => {
-      const quiz = investQuizData.find(q => q.id === id);
-      return quiz ? quiz.difficulty : null;
-    }).filter(d => d);
-
-    const difficultyCount = {
-      'E': currentDifficulties.filter(d => d === 'E').length,
-      'M': currentDifficulties.filter(d => d === 'M').length,
-      'H': currentDifficulties.filter(d => d === 'H').length
-    };
-
-    // 남은 문제 수에 따른 목표 난이도 결정
-    const remaining = QUIZ_CONFIG.daily_quiz_size - totalQuestions;
-    let targetDifficulty = null;
-
-    // 난이도별 우선순위 결정 (초급 2~3개, 응용 1~2개, 고급 0~1개)
-    if (difficultyCount['E'] < 2 || (difficultyCount['E'] < 3 && Math.random() > 0.5)) {
-      targetDifficulty = 'E';
-    } else if (difficultyCount['M'] < 2 && difficultyCount['E'] >= 2) {
-      targetDifficulty = 'M';
-    } else if (difficultyCount['H'] < 1 && difficultyCount['E'] >= 2 && difficultyCount['M'] >= 1 && Math.random() > 0.7) {
-      targetDifficulty = 'H';
-    }
-
-    // 목표 난이도가 있으면 해당 난이도 문제 우선 선택
-    let candidateQuestions = availableQuestions;
-    if (targetDifficulty) {
-      const targetQuestions = availableQuestions.filter(q => q.difficulty === targetDifficulty);
-      if (targetQuestions.length > 0) {
-        candidateQuestions = targetQuestions;
-      }
-    }
-
-    const selectedQuiz = candidateQuestions[Math.floor(Math.random() * candidateQuestions.length)];
-    
-    setCurrentQuestion({
-      id: selectedQuiz.id,
-      category: selectedQuiz.category,
-      difficulty: selectedQuiz.difficulty,
-      question: selectedQuiz.question,
-      options: [
-        { text: selectedQuiz.option1, isCorrect: selectedQuiz.answer === 1 },
-        { text: selectedQuiz.option2, isCorrect: selectedQuiz.answer === 2 }
-      ].sort(() => Math.random() - 0.5), // 순서 섞기
-      correctAnswer: selectedQuiz.answer,
-      tip: selectedQuiz.tip
-    });
-    
-    setSelectedAnswer(null);
-    setShowResult(false);
   };
 
   const handleAnswer = (selectedOption) => {
@@ -95,8 +50,6 @@ const InvestmentQuiz = ({ onGameEnd }) => {
     
     setSelectedAnswer(selectedOption);
     setShowResult(true);
-    setTotalQuestions(prev => prev + 1);
-    setUsedQuestions(prev => new Set([...prev, currentQuestion.id]));
 
     if (selectedOption.isCorrect) {
       setScore(score + 1);
@@ -104,51 +57,37 @@ const InvestmentQuiz = ({ onGameEnd }) => {
   };
 
   const nextQuestion = () => {
-    generateQuestion();
+    const nextIndex = currentQuestionIndex + 1;
+    if (nextIndex >= todayQuizzes.length) {
+      setGameOver(true);
+    } else {
+      setCurrentQuestionIndex(nextIndex);
+      setSelectedAnswer(null);
+      setShowResult(false);
+    }
   };
 
   const startGame = () => {
     setGameStarted(true);
     setScore(0);
-    setTotalQuestions(0);
+    setCurrentQuestionIndex(0);
     setGameOver(false);
-    setUsedQuestions(new Set());
-    generateQuestion();
+    setSelectedAnswer(null);
+    setShowResult(false);
+    loadTodayQuiz();
   };
 
   const resetGame = () => {
-    setGameStarted(false);
-    setScore(0);
-    setTotalQuestions(0);
-    setGameOver(false);
-    setCurrentQuestion(null);
-    setSelectedAnswer(null);
-    setShowResult(false);
-    setUsedQuestions(new Set());
+    if (onGameEnd) {
+      onGameEnd();
+    }
   };
 
-  // 게임 시작 시 첫 문제 생성
+  // 컴포넌트 마운트 시 오늘의 퀴즈 로드
   useEffect(() => {
-    if (gameStarted && !currentQuestion && !gameOver) {
-      generateQuestion();
-    }
-  }, [gameStarted]);
+    loadTodayQuiz();
+  }, []);
 
-  // 카운트다운 useEffect
-  useEffect(() => {
-    let timer;
-    if (autoAdvance && countdown > 0) {
-      timer = setTimeout(() => {
-        setCountdown(prev => prev - 1);
-      }, 500);
-    } else if (autoAdvance && countdown === 0) {
-      nextQuestion();
-    }
-    
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, [autoAdvance, countdown]);
 
   // 컴포넌트 props로 게임 시작 제어
   if (!gameStarted) {
@@ -181,42 +120,49 @@ const InvestmentQuiz = ({ onGameEnd }) => {
             <div className="text-xs text-gray-500">정답</div>
           </div>
           <div>
-            <div className="text-base font-bold text-gray-700">{totalQuestions}/{QUIZ_CONFIG.daily_quiz_size}</div>
+            <div className="text-base font-bold text-gray-700">{currentQuestionIndex + 1}/{QUIZ_CONFIG.daily_quiz_size}</div>
             <div className="text-xs text-gray-500">진행도</div>
           </div>
           <div>
-            <div className="text-base font-bold text-green-600">{totalQuestions > 0 ? Math.round((score/totalQuestions)*100) : 0}%</div>
+            <div className="text-base font-bold text-green-600">{currentQuestionIndex > 0 ? Math.round((score/(currentQuestionIndex))*100) : 0}%</div>
             <div className="text-xs text-gray-500">정답률</div>
           </div>
         </div>
         
       </div>
 
-      {/* 문제 카드 */}
-      {currentQuestion && (
+      {/* 로딩 또는 문제 카드 */}
+      {isLoading ? (
+        <div className="bg-white rounded-2xl p-8 shadow-lg flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-lg font-medium text-gray-600 mb-2">오늘의 퀴즈를 준비하고 있어요...</div>
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          </div>
+        </div>
+      ) : todayQuizzes.length > 0 && currentQuestionIndex < todayQuizzes.length ? (
         <div className="bg-white rounded-2xl p-3 shadow-lg flex-1">
           
           {/* 문제 표시 */}
           <div className="text-center mb-3 mt-8">
             <div className="flex justify-center gap-2 mb-2">
               <div className="inline-block bg-gradient-to-r from-green-600 to-green-700 text-white px-2 py-1 rounded-full text-xs">
-                {currentQuestion.category}
+                {todayQuizzes[currentQuestionIndex].category}
               </div>
               <div className={`inline-block text-white px-2 py-1 rounded-full text-xs ${
-                currentQuestion.difficulty === 'E' ? 'bg-green-500' :
-                currentQuestion.difficulty === 'M' ? 'bg-yellow-600' : 'bg-red-500'
+                todayQuizzes[currentQuestionIndex].difficulty === 'E' ? 'bg-green-500' :
+                todayQuizzes[currentQuestionIndex].difficulty === 'M' ? 'bg-yellow-600' : 'bg-red-500'
               }`}>
-                {getDifficultyLabel(currentQuestion.difficulty)}
+                {getDifficultyLabel(todayQuizzes[currentQuestionIndex].difficulty)}
               </div>
             </div>
             <div className="text-lg font-bold text-gray-800 leading-relaxed px-2 mb-3">
-              {currentQuestion.question}
+              {todayQuizzes[currentQuestionIndex].question}
             </div>
           </div>
 
           {/* 선택지 */}
           <div className="grid grid-cols-1 gap-2">
-            {currentQuestion.options.map((option, index) => {
+            {todayQuizzes[currentQuestionIndex].options.map((option, index) => {
               let buttonClass = "p-3 rounded-xl text-center font-medium transition-all duration-200 border-2 ";
               
               if (showResult) {
@@ -272,9 +218,9 @@ const InvestmentQuiz = ({ onGameEnd }) => {
               </div>
               
               {/* 정답/오답 상관없이 팁과 예시 표시 */}
-              {currentQuestion.tip && (
+              {todayQuizzes[currentQuestionIndex].tip && (
                 <div className="text-sm text-gray-600 bg-yellow-50 p-2 rounded mx-2 mt-3 whitespace-pre-line text-left">
-                  💡 {currentQuestion.tip.replace(/(\s예:)/g, '\n예:')}
+                  💡 {todayQuizzes[currentQuestionIndex].tip.replace(/(\s예:)/g, '\n예:')}
                 </div>
               )}
               
@@ -289,11 +235,11 @@ const InvestmentQuiz = ({ onGameEnd }) => {
                     </div>
                   </div>
                   <button
-                    onClick={onGameEnd}
+                    onClick={resetGame}
                     className="bg-green-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-700 transition-colors flex items-center gap-2 mx-auto text-sm"
                   >
                     <Trophy size={16} />
-                    다시 도전
+                    내일 다시 도전~!
                   </button>
                 </div>
               ) : (
@@ -309,6 +255,13 @@ const InvestmentQuiz = ({ onGameEnd }) => {
               )}
             </div>
           )}
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl p-8 shadow-lg flex-1 flex items-center justify-center">
+          <div className="text-center text-gray-600">
+            <div className="text-lg font-medium mb-2">오늘의 퀴즈를 불러올 수 없습니다</div>
+            <div className="text-sm">잠시 후 다시 시도해주세요.</div>
+          </div>
         </div>
       )}
 

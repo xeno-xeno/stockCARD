@@ -17,7 +17,7 @@ const QUIZ_CONFIG = {
     "H": 1
   },
   sampling_rules: {
-    exclude_recent_days: 7,
+    exclude_recent_days: 3,
     category_slack: 1,
     difficulty_strategy: "try-fill-category-first-then-difficulty",
     seed_strategy: "use-YYYYMMDD-as-seed-for-deterministic-daily-set"
