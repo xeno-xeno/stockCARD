@@ -95,12 +95,12 @@
             
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-2">
-                <h3 class="text-xl font-bold text-gray-800">매일투자퀴즈 20!</h3>
+                <h3 class="text-xl font-bold text-gray-800">매일투자퀴즈 5!</h3>
                 <span class="text-xs px-2 py-1 rounded-full font-medium bg-green-100 text-green-700">플레이 가능</span>
               </div>
               
               <p class="text-gray-600 text-sm mb-3 leading-relaxed">
-                매일 퀴즈에 도전하세요
+                가볍게 즐기는 5문항 투자 퀴즈
               </p>
               
               <div class="flex justify-between items-center">
@@ -189,8 +189,8 @@
       }
       
       function startInvestQuiz() {
-        // 투자 퀴즈는 React 앱에서만 실행 가능
-        alert('매일투자퀴즈 20!은 개발 서버에서만 플레이 가능합니다.\n\n터미널에서 "npm run dev" 명령을 실행하고\nhttp://localhost:5173/stockCARD/ 로 접속해주세요.');
+        // quiz.html로 직접 이동
+        window.location.href = './quiz.html';
       }
     </script>
   </body>
