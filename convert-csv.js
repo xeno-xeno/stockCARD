@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const csvContent = fs.readFileSync('./quiz_pool_300_final_tip.csv', 'utf8');
+const csvContent = fs.readFileSync('./quiz_stock300.csv', 'utf8');
 const lines = csvContent.split('\n').filter(line => line.trim());
 const header = lines[0].split(',');
 
