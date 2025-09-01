@@ -7,12 +7,12 @@ const InvestQuizStart = ({ onStartGame, onBack }) => {
         <div className="text-center bg-white p-6 rounded-2xl shadow-lg w-full max-w-md">
           <div className="flex items-center justify-center gap-2 mb-4">
             <TrendingUp className="text-green-600" size={32} />
-            <h1 className="text-2xl font-bold text-gray-800">매일투자퀴즈 20!</h1>
+            <h1 className="text-2xl font-bold text-gray-800">매일투자퀴즈 5!</h1>
           </div>
           
           <p className="text-base text-gray-600 mb-6 leading-relaxed">
-            매일 퀴즈에 도전하세요.<br />
-            듀오링고처럼 어느새 투자실력이 쑥~!
+            가볍게 즐기는 투자 퀴즈!<br />
+            5문항으로 오늘의 투자 지식을 체크하세요.
           </p>
           
           <div className="bg-gray-50 p-4 rounded-lg mb-6">

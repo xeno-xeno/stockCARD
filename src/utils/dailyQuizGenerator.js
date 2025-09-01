@@ -2,19 +2,19 @@
 
 // 퀴즈 생성 설정
 const QUIZ_CONFIG = {
-  daily_quiz_size: 20,
+  daily_quiz_size: 5,
   category_quota: {
-    "투자지표": 5,
-    "차트/기술": 2,
-    "시장상식": 4,
-    "기본개념": 3,
-    "배당": 3,
-    "심리/매크로": 3
+    "투자지표": 1,
+    "차트/기술": 1,
+    "시장상식": 2,
+    "기본개념": 1,
+    "배당": 0,
+    "심리/매크로": 0
   },
   difficulty_quota: {
-    "E": 8,
-    "M": 8, 
-    "H": 4
+    "E": 2,
+    "M": 2, 
+    "H": 1
   },
   sampling_rules: {
     exclude_recent_days: 7,

@@ -6,7 +6,7 @@ import { getDifficultyLabel, QUIZ_CONFIG } from '../utils/dailyQuizGenerator';
 const InvestmentQuiz = ({ onGameEnd }) => {
   // 브라우저 타이틀 설정
   useEffect(() => {
-    document.title = '매일투자퀴즈 20! - StockGame';
+    document.title = '매일투자퀴즈 5! - StockGame';
     return () => {
       document.title = 'StockGame'; // 컴포넌트 언마운트 시 원래 타이틀로 복원
     };
@@ -21,20 +21,15 @@ const InvestmentQuiz = ({ onGameEnd }) => {
   const [autoAdvance, setAutoAdvance] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [usedQuestions, setUsedQuestions] = useState(new Set());
-  const [maxStreak, setMaxStreak] = useState(() => {
-    const saved = localStorage.getItem('investQuizMaxStreak');
-    return saved ? parseInt(saved, 10) : 0;
-  });
 
-  // 새 문제 생성 (랜덤)
+  // 새 문제 생성 (난이도 균형 고려)
   const generateQuestion = () => {
-    // 20문제 완료 시 게임 종료
     if (totalQuestions >= QUIZ_CONFIG.daily_quiz_size) {
       setGameOver(true);
       return;
     }
 
-    // 아직 사용하지 않은 문제들 중에서 랜덤 선택
+    // 아직 사용하지 않은 문제들 중에서 선택
     const availableQuestions = investQuizData.filter(quiz => !usedQuestions.has(quiz.id));
     
     if (availableQuestions.length === 0) {
@@ -42,7 +37,41 @@ const InvestmentQuiz = ({ onGameEnd }) => {
       return;
     }
 
-    const selectedQuiz = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+    // 현재까지 선택된 난이도별 개수 계산
+    const currentDifficulties = Array.from(usedQuestions).map(id => {
+      const quiz = investQuizData.find(q => q.id === id);
+      return quiz ? quiz.difficulty : null;
+    }).filter(d => d);
+
+    const difficultyCount = {
+      'E': currentDifficulties.filter(d => d === 'E').length,
+      'M': currentDifficulties.filter(d => d === 'M').length,
+      'H': currentDifficulties.filter(d => d === 'H').length
+    };
+
+    // 남은 문제 수에 따른 목표 난이도 결정
+    const remaining = QUIZ_CONFIG.daily_quiz_size - totalQuestions;
+    let targetDifficulty = null;
+
+    // 난이도별 우선순위 결정 (초급 2~3개, 응용 1~2개, 고급 0~1개)
+    if (difficultyCount['E'] < 2 || (difficultyCount['E'] < 3 && Math.random() > 0.5)) {
+      targetDifficulty = 'E';
+    } else if (difficultyCount['M'] < 2 && difficultyCount['E'] >= 2) {
+      targetDifficulty = 'M';
+    } else if (difficultyCount['H'] < 1 && difficultyCount['E'] >= 2 && difficultyCount['M'] >= 1 && Math.random() > 0.7) {
+      targetDifficulty = 'H';
+    }
+
+    // 목표 난이도가 있으면 해당 난이도 문제 우선 선택
+    let candidateQuestions = availableQuestions;
+    if (targetDifficulty) {
+      const targetQuestions = availableQuestions.filter(q => q.difficulty === targetDifficulty);
+      if (targetQuestions.length > 0) {
+        candidateQuestions = targetQuestions;
+      }
+    }
+
+    const selectedQuiz = candidateQuestions[Math.floor(Math.random() * candidateQuestions.length)];
     
     setCurrentQuestion({
       id: selectedQuiz.id,
@@ -70,13 +99,7 @@ const InvestmentQuiz = ({ onGameEnd }) => {
     setUsedQuestions(prev => new Set([...prev, currentQuestion.id]));
 
     if (selectedOption.isCorrect) {
-      const newScore = score + 1;
-      setScore(newScore);
-      setMaxStreak(current => {
-        const newMax = Math.max(current, newScore);
-        localStorage.setItem('investQuizMaxStreak', newMax.toString());
-        return newMax;
-      });
+      setScore(score + 1);
     }
   };
 
@@ -141,7 +164,7 @@ const InvestmentQuiz = ({ onGameEnd }) => {
         <div className="flex justify-between items-center mb-2">
           <h1 className="text-base font-bold text-gray-800 flex items-center gap-1">
             <Target className="text-blue-600" size={16} />
-            매일투자퀴즈 20!
+            매일투자퀴즈 5!
           </h1>
           <button
             onClick={onGameEnd || resetGame}
@@ -152,7 +175,7 @@ const InvestmentQuiz = ({ onGameEnd }) => {
           </button>
         </div>
 
-        <div className="grid grid-cols-4 gap-2 text-center">
+        <div className="grid grid-cols-3 gap-2 text-center">
           <div>
             <div className="text-base font-bold text-blue-600">{score}</div>
             <div className="text-xs text-gray-500">정답</div>
@@ -164,10 +187,6 @@ const InvestmentQuiz = ({ onGameEnd }) => {
           <div>
             <div className="text-base font-bold text-green-600">{totalQuestions > 0 ? Math.round((score/totalQuestions)*100) : 0}%</div>
             <div className="text-xs text-gray-500">정답률</div>
-          </div>
-          <div>
-            <div className="text-base font-bold text-orange-600">{maxStreak}</div>
-            <div className="text-xs text-gray-500">최고기록</div>
           </div>
         </div>
         
@@ -254,7 +273,7 @@ const InvestmentQuiz = ({ onGameEnd }) => {
               
               {/* 정답/오답 상관없이 팁과 예시 표시 */}
               {currentQuestion.tip && (
-                <div className="text-xs text-gray-600 bg-yellow-50 p-2 rounded mx-2 mt-2 whitespace-pre-line text-left">
+                <div className="text-sm text-gray-600 bg-yellow-50 p-2 rounded mx-2 mt-3 whitespace-pre-line text-left">
                   💡 {currentQuestion.tip.replace(/(\s예:)/g, '\n예:')}
                 </div>
               )}
@@ -263,12 +282,12 @@ const InvestmentQuiz = ({ onGameEnd }) => {
                 <div className="space-y-1.5">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-blue-600 mb-2">🎊 퀴즈 완료!</div>
-                    <div className="text-lg font-bold text-green-600 mb-1">{score}/20 정답</div>
-                    <div className="text-sm text-gray-600 mb-1">정답률: {Math.round((score/20)*100)}%</div>
+                    <div className="text-lg font-bold text-green-600 mb-1">{score}/5 정답</div>
+                    <div className="text-sm text-gray-600 mb-1">정답률: {Math.round((score/5)*100)}%</div>
                     <div className="text-xs text-gray-500">
-                      {score >= 18 ? '완벽해요! 🏆' : 
-                       score >= 15 ? '훌륭해요! 👏' : 
-                       score >= 10 ? '좋아요! 👍' : '계속 공부해보세요! 📚'}
+                      {score >= 5 ? '완벽해요! 🏆' : 
+                       score >= 4 ? '훌륭해요! 👏' : 
+                       score >= 3 ? '좋아요! 👍' : '계속 공부해보세요! 📚'}
                     </div>
                   </div>
                   <button
@@ -280,13 +299,15 @@ const InvestmentQuiz = ({ onGameEnd }) => {
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={nextQuestion}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto text-sm"
-                >
-                  다음 문제
-                  <ChevronRight size={16} />
-                </button>
+                <div className="mt-4">
+                  <button
+                    onClick={nextQuestion}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto text-sm"
+                  >
+                    다음 문제
+                    <ChevronRight size={16} />
+                  </button>
+                </div>
               )}
             </div>
           )}

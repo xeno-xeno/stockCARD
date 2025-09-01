@@ -20,8 +20,8 @@ const GameSelection = ({ onGameSelect }) => {
     },
     {
       id: 'invest-quiz',
-      title: '매일투자퀴즈 20!',
-      description: '매일 퀴즈에 도전하세요',
+      title: '매일투자퀴즈 5!',
+      description: '가볍게 즐기는 5문항 투자 퀴즈',
       icon: TrendingUp,
       iconColor: 'text-green-600',
       bgColor: 'from-green-50 to-green-100',
