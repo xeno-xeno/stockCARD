@@ -18,7 +18,7 @@ const InvestQuizStart = ({ onStartGame, onBack }) => {
           <div className="bg-gray-50 p-4 rounded-lg mb-6">
             <h3 className="font-semibold text-gray-700 mb-4">게임 방법</h3>
             <ul className="text-sm text-gray-600 space-y-2 text-left">
-              <li>• 투자 관련 퀴즈가 출제됩니다</li>
+              <li>• 매일 5개의 투자 퀴즈가 출제됩니다</li>
               <li>• 2개의 선택지 중 올바른 답을 고르세요</li>
               <li>• 정답률과 최고기록이 저장됩니다</li>
             </ul>
