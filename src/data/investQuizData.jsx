@@ -183,7 +183,7 @@ export const investQuizData = [
     "id": 19,
     "category": "기본개념",
     "difficulty": "E",
-    "question": "주식 거래 시간은 언제인가요?",
+    "question": "한국주식 거래 시간은 언제인가요?",
     "option1": "오전 9시-오후 3시 30분",
     "option2": "오전 8시-오후 4시",
     "answer": 1,

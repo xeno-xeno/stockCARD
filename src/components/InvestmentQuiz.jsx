@@ -281,9 +281,7 @@ const InvestmentQuiz = ({ onGameEnd }) => {
               {gameOver ? (
                 <div className="space-y-1.5">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-2">🎊 퀴즈 완료!</div>
-                    <div className="text-lg font-bold text-green-600 mb-1">{score}/5 정답</div>
-                    <div className="text-sm text-gray-600 mb-1">정답률: {Math.round((score/5)*100)}%</div>
+                    <div className="text-lg font-bold text-blue-600 mb-2">🎊 퀴즈 완료! 정답률: {Math.round((score/5)*100)}%</div>
                     <div className="text-xs text-gray-500">
                       {score >= 5 ? '완벽해요! 🏆' : 
                        score >= 4 ? '훌륭해요! 👏' : 
