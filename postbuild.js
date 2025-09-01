@@ -24,7 +24,10 @@ gameHtml = gameHtml.replace('</head>', `  <link rel="stylesheet" href="../assets
 
 fs.writeFileSync('./dist/game/index.html', gameHtml);
 
-// public/index.html을 dist/index.html로 복사
-fs.copyFileSync('./public/index.html', './dist/index.html');
+// GitHub Actions에서는 빌드된 index.html을 그대로 사용
+// public/index.html 복사는 로컬 빌드에서만 필요함
+if (!process.env.CI) {
+  fs.copyFileSync('./public/index.html', './dist/index.html');
+}
 
 console.log('Post-build completed successfully!');

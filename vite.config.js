@@ -23,7 +23,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: 'game.html',
+        main: 'index.html',
+        game: 'game.html',
         quiz: 'quiz.html',
       }
     }
