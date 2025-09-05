@@ -20,13 +20,13 @@ const GameSelection = ({ onGameSelect }) => {
     },
     {
       id: 'invest-quiz',
-      title: '매일투자퀴즈 5!',
-      description: '가볍게 즐기는 5문항 투자 퀴즈',
+      title: '매일 투자지식 한스푼',
+      description: '매일 하나씩 배우는 투자 지식',
       icon: TrendingUp,
       iconColor: 'text-green-600',
       bgColor: 'from-green-50 to-green-100',
       borderColor: 'hover:border-green-300',
-      difficulty: '초급~중급',
+      difficulty: '초급~고급',
       status: '플레이 가능'
     },
     {
